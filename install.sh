@@ -27,6 +27,8 @@ SKIP_SUMMARY=false
 QUIET_MODE=false
 
 NTGCALLS_VERSION="v2.1.0"
+GO_REQUIRED="1.25.7"
+GO_TARGET="1.25.7"
 
 OS_TYPE=""
 ARCH_TYPE=""
@@ -424,26 +426,20 @@ check_install_go() {
 
     print_step "Checking Go..."
 
-    local go_required="1.25.7"
-    local go_target="1.25.7"
-
-    # Check existing installation.
     local current_go=""
     if command -v go >/dev/null 2>&1; then
         current_go=$(go version | awk '{print $3}' | sed 's/go//')
-        if version_ge "$current_go" "$go_required"; then
+        if version_ge "$current_go" "$GO_REQUIRED"; then
             print_success "Go $current_go (sufficient)"
             return 0
         fi
-        print_warning "Go $current_go is too old (need $go_required+), reinstalling..."
+        print_warning "Go $current_go is too old (need $GO_REQUIRED+), reinstalling..."
     fi
 
     case "$OS_TYPE" in
 
         linux)
             if command -v snap >/dev/null 2>&1; then
-                # Remove outdated installation before snap install.
-                # Three possible prior install sources must all be handled.
                 if [[ -n "$current_go" ]]; then
                     if snap list go >/dev/null 2>&1; then
                         run_as_root "Removing old Go snap" snap remove go
@@ -461,7 +457,7 @@ check_install_go() {
                         return 0
                     fi
                 else
-                    print_info "Installing Go $go_target via snap..."
+                    print_info "Installing Go $GO_TARGET via snap..."
                     if run_as_root "Installing Go snap" snap install go --classic; then
                         print_success "Go $(go version | awk '{print $3}') installed via snap"
                         return 0
@@ -472,9 +468,8 @@ check_install_go() {
                 return 1
 
             else
-                # No snap — tarball install.
-                print_info "Installing Go $go_target via tarball..."
-                local archive="go${go_target}.linux-${ARCH_TYPE}.tar.gz"
+                print_info "Installing Go $GO_TARGET via tarball..."
+                local archive="go${GO_TARGET}.linux-${ARCH_TYPE}.tar.gz"
                 local url="https://go.dev/dl/${archive}"
 
                 if download_file "$url" "/tmp/${archive}"; then
@@ -503,12 +498,12 @@ check_install_go() {
 
                 local final_ver
                 final_ver=$(go version 2>/dev/null | awk '{print $3}' | sed 's/go//')
-                if version_ge "$final_ver" "$go_required"; then
+                if version_ge "$final_ver" "$GO_REQUIRED"; then
                     print_success "Go $final_ver installed via Homebrew"
                     return 0
                 fi
 
-                print_soft_error "Go $final_ver via Homebrew is still below $go_required"
+                print_soft_error "Go $final_ver via Homebrew is still below $GO_REQUIRED"
                 return 1
             fi
 
@@ -517,7 +512,7 @@ check_install_go() {
             ;;
 
         windows)
-            print_warning "Go $go_required or higher is required. Please install manually from https://go.dev/dl/"
+            print_warning "Go $GO_REQUIRED or higher is required. Please install manually from https://go.dev/dl/"
             WARNINGS=$((WARNINGS + 1))
             return 1
             ;;
