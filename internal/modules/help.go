@@ -64,7 +64,7 @@ func helpHandler(m *tg.NewMessage) error {
 		m.Reply(
 			F(m.ChannelID(), "help_private_only"),
 			&tg.SendOptions{
-				ReplyMarkup: core.GetGroupHelpKeyboard(m.ChannelID(), m.Client.Me().Username),
+				ReplyMarkup: core.GetGroupHelpKeyboard(m.ChannelID()),
 			},
 		)
 		return tg.ErrEndGroup

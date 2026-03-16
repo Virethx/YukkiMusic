@@ -72,7 +72,7 @@ func startHandler(m *tg.NewMessage) error {
 		}, &tg.MediaOptions{
 			Caption:     caption,
 			NoForwards:  true,
-			ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
+			ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
 		})
 		if err != nil {
 			gologging.Error(
@@ -82,7 +82,7 @@ func startHandler(m *tg.NewMessage) error {
 			_, err = m.RespondMedia(config.StartImage, &tg.MediaOptions{
 				Caption:     caption,
 				NoForwards:  true,
-				ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
+				ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
 			})
 			if err != nil {
 				gologging.Error(
@@ -91,7 +91,7 @@ func startHandler(m *tg.NewMessage) error {
 
 				_, err = m.Respond(caption, &tg.SendOptions{
 					NoForwards:  true,
-					ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
+					ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
 				})
 				return err
 			}
@@ -127,7 +127,7 @@ func startCB(cb *tg.CallbackQuery) error {
 	})
 
 	sendOpt := &tg.SendOptions{
-		ReplyMarkup: core.GetStartMarkup(cb.ChannelID(), cb.Client.Me().Username),
+		ReplyMarkup: core.GetStartMarkup(cb.ChannelID()),
 		NoForwards:  true,
 	}
 

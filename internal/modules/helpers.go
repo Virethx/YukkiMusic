@@ -373,7 +373,7 @@ func warnAndLeave(client *tg.Client, chatID int64) {
 		chatID,
 		text,
 		&tg.SendOptions{
-			ReplyMarkup: core.AddMeMarkup(chatID, client.Me().Username),
+			ReplyMarkup: core.AddMeMarkup(chatID),
 			LinkPreview: false,
 		},
 	)
