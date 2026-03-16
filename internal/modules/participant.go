@@ -97,7 +97,7 @@ func handleParticipantUpdate(p *telegram.ParticipantUpdate) error {
 		newStatus != "administrator" &&
 		newStatus != "creator":
 
-		if userID == core.BUser.ID && config.LeaveOnDemoted {
+		if userID == p.Client.Me().ID && config.LeaveOnDemoted {
 
 			core.DeleteRoom(chatID)
 			core.DeleteChatState(chatID)
@@ -217,7 +217,7 @@ func handleSudoJoin(p *telegram.ParticipantUpdate, chatID int64) {
 
 	text := F(chatID, msgKey, locales.Arg{
 		"user": utils.MentionHTML(p.User),
-		"bot":  utils.MentionHTML(core.BUser),
+		"bot":  utils.MentionHTML(p.Client.Me()),
 	})
 
 	p.Client.SendMessage(chatID, text)

@@ -616,7 +616,7 @@ func playTracksAndRespond(
 		})
 
 		replyMsg, _ = utils.EOR(replyMsg, nowPlayingText, opt)
-		r.SetMystic(replyMsg)
+		r.SetStatusMsg(replyMsg)
 
 		if len(tracks) > 1 {
 			addedCount := len(tracks) - 1
@@ -687,7 +687,7 @@ func playTrackWithRetry(
 ) error {
 	for attempt := 1; attempt <= playMaxRetries; attempt++ {
 
-		if r.Destroyed() {
+		if r.IsDestroyed() {
 			gologging.Info("Room destroyed during retry, aborting")
 			replyMsg.Delete()
 			return tg.ErrEndGroup

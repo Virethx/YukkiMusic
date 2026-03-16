@@ -63,7 +63,7 @@ func handleAddSudo(m *telegram.NewMessage) error {
 	}
 
 	// Trying to add the bot itself
-	if targetID == core.BUser.ID {
+	if targetID == m.Client.Me().ID {
 		m.Reply(F(chatID, "sudo_bot_self"))
 		return telegram.ErrEndGroup
 	}
@@ -253,11 +253,11 @@ func handleGetSudoers(m *telegram.NewMessage) error {
 	utils.SetFlood(floodKey, 30*time.Second)
 
 	// "⏳ Fetching sudoers list..."
-	mystic, _ := m.Reply(F(chatID, "sudo_list_fetching"))
+	statusMsg, _ := m.Reply(F(chatID, "sudo_list_fetching"))
 
 	list, err := database.GetSudoers()
 	if err != nil {
-		utils.EOR(mystic, F(chatID, "sudo_list_fetch_fail", locales.Arg{
+		utils.EOR(statusMsg, F(chatID, "sudo_list_fetch_fail", locales.Arg{
 			"error": err.Error(),
 		}))
 		return telegram.ErrEndGroup
@@ -321,6 +321,6 @@ func handleGetSudoers(m *telegram.NewMessage) error {
 		sb.WriteString("\n")
 	}
 
-	utils.EOR(mystic, sb.String())
+	utils.EOR(statusMsg, sb.String())
 	return telegram.ErrEndGroup
 }
