@@ -32,11 +32,11 @@ import (
 
 var F func(chatID int64, key string, values ...locales.Arg) string // overwritten from main.go
 
-func AddMeMarkup(chatID int64) tg.ReplyMarkup {
+func AddMeMarkup(chatID int64, botUsername string) tg.ReplyMarkup {
 	return tg.NewKeyboard().
 		AddRow(
 			tg.Button.URL(F(chatID, "ADD_ME_BTN"),
-				"https://t.me/"+BUser.Username+"?startgroup&admin=invite_users",
+				"https://t.me/"+botUsername+"?startgroup&admin=invite_users",
 			),
 		).
 		Build()
@@ -69,7 +69,7 @@ func SuppMarkup(chatID int64) tg.ReplyMarkup {
 func GetPlayMarkup(chatID int64, r *RoomState, queued bool) tg.ReplyMarkup {
 	btn := tg.NewKeyboard()
 	prefix := "room:"
-	if r.CplayID() != 0 {
+	if r.ChannelPlayID() != 0 {
 		prefix = "croom:"
 	}
 	track := r.Track()
@@ -110,20 +110,20 @@ func GetPlayMarkup(chatID int64, r *RoomState, queued bool) tg.ReplyMarkup {
 	return btn.Build()
 }
 
-func GetGroupHelpKeyboard(chatID int64) *tg.ReplyInlineMarkup {
+func GetGroupHelpKeyboard(chatID int64, botUsername string) *tg.ReplyInlineMarkup {
 	return tg.NewKeyboard().
 		AddRow(
-			tg.Button.URL(F(chatID, "GC_HELP_BTN"), "https://t.me/"+BUser.Username+"?start=pm_help"),
+			tg.Button.URL(F(chatID, "GC_HELP_BTN"), "https://t.me/"+botUsername+"?start=pm_help"),
 		).
 		Build()
 }
 
-func GetStartMarkup(chatID int64) tg.ReplyMarkup {
+func GetStartMarkup(chatID int64, botUsername string) tg.ReplyMarkup {
 	return tg.NewKeyboard().
 		AddRow(
 			tg.Button.URL(
 				F(chatID, "ADD_ME_BTN"),
-				"https://t.me/"+BUser.Username+"?startgroup&admin=invite_users",
+				"https://t.me/"+botUsername+"?startgroup&admin=invite_users",
 			),
 		).
 		AddRow(

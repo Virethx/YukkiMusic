@@ -35,8 +35,7 @@ import (
 )
 
 var (
-	Bot   *telegram.Client
-	BUser *telegram.UserObj
+	Bot *telegram.Client
 
 	Assistants            *AssistantManager
 	GetAssistantIndexFunc func(chatID int64, assistantCount int) (int, error) // GetAssistantIndexFunc = database.GetAssistantIndex
@@ -45,7 +44,6 @@ var (
 func Init() func() {
 	gologging.Info("Starting bot client...")
 	Bot = initBotClient()
-	BUser = getSelfOrFatal(Bot, "bot")
 
 	gologging.Info("Starting assistant clients...")
 
@@ -73,7 +71,7 @@ func Init() func() {
 				fmt.Sprintf("Assistant %d Started", i+1),
 			)
 		}
-		client.SendMessage(BUser.Username, "/start")
+		client.SendMessage(Bot.Me().Username, "/start")
 		client.JoinChannel("TheTeamVivek")
 		gologging.InfoF("assistant[%d] ready: %s", i, user.FirstName)
 	}

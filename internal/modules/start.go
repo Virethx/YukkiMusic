@@ -63,7 +63,7 @@ func startHandler(m *tg.NewMessage) error {
 	default:
 		caption := F(m.ChannelID(), "start_private", locales.Arg{
 			"user": utils.MentionHTML(m.Sender),
-			"bot":  utils.MentionHTML(core.BUser),
+			"bot":  utils.MentionHTML(m.Client.Me()),
 		})
 
 		_, err := m.RespondMedia(&tg.InputMediaWebPage{
@@ -72,7 +72,7 @@ func startHandler(m *tg.NewMessage) error {
 		}, &tg.MediaOptions{
 			Caption:     caption,
 			NoForwards:  true,
-			ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
+			ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
 		})
 		if err != nil {
 			gologging.Error(
@@ -82,7 +82,7 @@ func startHandler(m *tg.NewMessage) error {
 			_, err = m.RespondMedia(config.StartImage, &tg.MediaOptions{
 				Caption:     caption,
 				NoForwards:  true,
-				ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
+				ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
 			})
 			if err != nil {
 				gologging.Error(
@@ -91,7 +91,7 @@ func startHandler(m *tg.NewMessage) error {
 
 				_, err = m.Respond(caption, &tg.SendOptions{
 					NoForwards:  true,
-					ReplyMarkup: core.GetStartMarkup(m.ChannelID()),
+					ReplyMarkup: core.GetStartMarkup(m.ChannelID(), m.Client.Me().Username),
 				})
 				return err
 			}
@@ -123,11 +123,11 @@ func startCB(cb *tg.CallbackQuery) error {
 
 	caption := F(cb.ChannelID(), "start_private", locales.Arg{
 		"user": utils.MentionHTML(cb.Sender),
-		"bot":  utils.MentionHTML(core.BUser),
+		"bot":  utils.MentionHTML(cb.Client.Me()),
 	})
 
 	sendOpt := &tg.SendOptions{
-		ReplyMarkup: core.GetStartMarkup(cb.ChannelID()),
+		ReplyMarkup: core.GetStartMarkup(cb.ChannelID(), cb.Client.Me().Username),
 		NoForwards:  true,
 	}
 
