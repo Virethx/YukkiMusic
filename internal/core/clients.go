@@ -44,6 +44,9 @@ var (
 func Init() func() {
 	gologging.Info("Starting bot client...")
 	Bot = initBotClient()
+	if _, err := Bot.GetMe(); err != nil {
+		gologging.Fatal("❌ Failed to GetMe for bot: " + err.Error())
+	}
 
 	gologging.Info("Starting assistant clients...")
 
@@ -53,7 +56,10 @@ func Init() func() {
 		gologging.InfoF("Initializing assistant[%d]...", i)
 
 		client := initAssistantClient(sess, i)
-		user := getSelfOrFatal(client, fmt.Sprintf("assistant[%d]", i))
+		user, err := client.GetMe()
+		if err != nil {
+			gologging.Fatal(fmt.Sprintf("❌ Failed to GetMe for assistant[%d]: %v", i, err))
+		}
 		ctx := ubot.NewContext(client)
 
 		client.SetCommandPrefixes(".")
@@ -164,15 +170,6 @@ func initAssistantClient(
 	}
 
 	return client
-}
-
-func getSelfOrFatal(c *telegram.Client, label string) *telegram.UserObj {
-	me, err := c.GetMe()
-	if err != nil {
-		gologging.Fatal("❌ Failed to GetMe for " + label + ": " + err.Error())
-	}
-	gologging.Info("Logged in as " + label + ": " + me.FirstName)
-	return me
 }
 
 func decodePyrogramSessionString(
