@@ -31,7 +31,6 @@ import (
 	"github.com/amarnathcjd/gogram/telegram"
 
 	state "main/internal/core/models"
-	"main/ubot"
 )
 
 var (
@@ -72,7 +71,7 @@ type RoomState struct {
 	Data      map[string]any
 
 	// Internal Components
-	ntg       *ubot.Context
+	Assistant *Assistant
 	destroyed atomic.Bool
 }
 
@@ -132,11 +131,11 @@ func createNewRoom(chatID int64, ass *Assistant) (*RoomState, bool) {
 	room, exists := rooms[chatID]
 	if !exists {
 		room = &RoomState{
-			chatID: chatID,
-			queue:  []*state.Track{},
-			speed:  1.0,
-			ntg:    ass.Ntg,
-			Data:   make(map[string]any),
+			chatID:    chatID,
+			queue:     []*state.Track{},
+			speed:     1.0,
+			Assistant: ass,
+			Data:      make(map[string]any),
 		}
 		room.destroyed.Store(false)
 		rooms[chatID] = room

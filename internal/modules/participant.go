@@ -120,7 +120,7 @@ func handleParticipantUpdate(p *telegram.ParticipantUpdate) error {
 		handleSudoJoin(p, chatID)
 	}
 
-	if state != nil && userID == state.Assistant.User.ID {
+	if state != nil && userID == state.Assistant.Self.ID {
 
 		if p.IsJoined() {
 			state.SetAssistantPresent(true)
@@ -251,8 +251,8 @@ func handleAssistantRestriction(
 		s.SetAssistantBanned(true)
 
 		msg := F(chatID, "assistant_restricted_warning", locales.Arg{
-			"assistant": utils.MentionHTML(s.Assistant.User),
-			"id":        s.Assistant.User.ID,
+			"assistant": utils.MentionHTML(s.Assistant.Self),
+			"id":        s.Assistant.Self.ID,
 		})
 
 		p.Client.SendMessage(chatID, msg)

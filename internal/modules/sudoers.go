@@ -70,7 +70,7 @@ func handleAddSudo(m *telegram.NewMessage) error {
 
 	// Trying to add the assistant
 	if ass, err := core.Assistants.ForChat(chatID); err == nil {
-		if targetID == ass.User.ID {
+		if targetID == ass.Self.ID {
 			m.Reply(F(chatID, "sudo_assistant_self"))
 			return telegram.ErrEndGroup
 		}
@@ -177,7 +177,7 @@ func handleDelSudo(m *telegram.NewMessage) error {
 
 	// Cannot remove assistant (UbUser)
 	if ass, err := core.Assistants.ForChat(chatID); err == nil {
-		if targetID == ass.User.ID {
+		if targetID == ass.Self.ID {
 			m.Reply(F(chatID, "sudo_assistant_cannot_remove"))
 			return telegram.ErrEndGroup
 		}

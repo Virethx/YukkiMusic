@@ -67,7 +67,7 @@ func Init() func() {
 		assistants = append(assistants, &Assistant{
 			Index:  i,
 			Client: client,
-			User:   user,
+			Self:   user,
 			Ntg:    ctx,
 		})
 

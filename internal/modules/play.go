@@ -410,8 +410,8 @@ func fetchTracksAndCheckStatus(
 	if banned {
 		utils.EOR(replyMsg,
 			F(m.ChannelID(), "err_assistant_banned", locales.Arg{
-				"user": utils.MentionHTML(cs.Assistant.User),
-				"id":   utils.IntToStr(cs.Assistant.User.ID),
+				"user": utils.MentionHTML(cs.Assistant.Self),
+				"id":   utils.IntToStr(cs.Assistant.Self.ID),
 			}),
 		)
 		return nil, false, fmt.Errorf("assistant banned")
